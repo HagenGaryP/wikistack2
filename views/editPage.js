@@ -38,6 +38,17 @@ module.exports = (page, author) => layout(html`
         </select>
       </div>
     </div>
+    <div class="form-group">
+      <label for="tags" class="col-sm-2 control-label">Tags</label>
+      <div class="col-sm-10">
+        <input
+          name="tags"
+          type="text"
+          class="form-control"
+          value="${page.tags.length? page.tags.join(', ') : ""}"
+        />
+      </div>
+    </div>
     <div class="col-sm-offset-2 col-sm-10">
         <button type="submit" class="btn btn-primary">submit</button>
     </div>

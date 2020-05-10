@@ -31,6 +31,13 @@ router.post("/", async (req, res, next) => {
   } catch (error) { next(error) }
 });
 
+router.get("/search", async (req, res, next) => {
+  try {
+    const pages = await Page.findByTag(req.query.search);
+    res.send(main(pages));
+  } catch (error) { next(error) }
+});
+
 router.post("/:slug", async (req, res, next) => {
   try {
     const [updatedRowCount, updatedPages] = await Page.update(req.body, {
@@ -70,10 +77,6 @@ router.get("/:slug", async (req, res, next) => {
       }
     });
     if (page === null) {
-      // setTimeout(function(){
-      //   res.redirect('/wiki');
-      // }, 3000);
-      // res.status(404)
       res.sendStatus(404);
     } else {
       const author = await page.getAuthor();
@@ -98,5 +101,23 @@ router.get("/:slug/edit", async (req, res, next) => {
     }
   } catch (error) { next(error) }
 });
+
+router.get("/:slug/similar", async (req, res, next) => {
+  try {
+    const page = await Page.findOne({
+      where: {
+        slug: req.params.slug
+      }
+    });
+
+    if (page === null) {
+      res.sendStatus(404);
+    } else {
+      const similar = await page.findSimilar();
+      res.send(main(similar));
+    }
+  } catch (error) { next(error) }
+});
+
 
 module.exports = router;
